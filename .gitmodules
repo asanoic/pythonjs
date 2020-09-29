@@ -1,0 +1,3 @@
+[submodule "napi"]
+	path = napi
+	url = https://github.com/asanoic/node-napi-mingw64.git
