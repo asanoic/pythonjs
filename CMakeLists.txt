@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(pythonjs)
+project("python.js")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -38,7 +38,7 @@ add_custom_target(copy-files ALL
 ## other files
 add_custom_target(other-files SOURCES
     "${pwd}/src/test.js"
-    "${pwd}/src/napi-python.d.ts"
+    "${pwd}/src/python.js.d.ts"
 )
 
 
