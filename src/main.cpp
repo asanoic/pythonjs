@@ -5,6 +5,30 @@ using namespace std;
 #include "napi.h"
 
 Napi::Object napiInit(Napi::Env env, Napi::Object exports) {
+    PyImport_AppendInittab("emb", []() -> PyObject* {
+        static PyMethodDef EmbMethods[] = {
+            {"numargs",
+             [](PyObject* self, PyObject* args) -> PyObject* {
+                 int v  = 0, m = 0;
+                 int len = PyObject_Size(args);
+//                 PyObject* itr = PyObject_GetIter(args);
+//                 for (PyObject* item = PyIter_Next(itr); item; item = PyIter_Next(itr)) {
+//                     int ttt = PyObject_Size(item);
+//                 }
+                 if (!PyArg_ParseTuple(args, "ii", &v, &m))
+                     return NULL;
+                 return PyLong_FromLong(v * m);
+             },
+             METH_VARARGS,
+             "Return the number of arguments received by the process."},
+            {NULL, NULL, 0, NULL}};
+
+        static PyModuleDef EmbModule = {
+            PyModuleDef_HEAD_INIT, "emb", NULL, -1, EmbMethods,
+            NULL, NULL, NULL, NULL};
+
+        return PyModule_Create(&EmbModule);
+    });
     Py_Initialize();
     Napi::Object versions = Napi::Object::New(env);
     const napi_node_version* nodeVersion = Napi::VersionManagement::GetNodeVersion(env);
@@ -15,7 +39,9 @@ Napi::Object napiInit(Napi::Env env, Napi::Object exports) {
     exports.Set("versions", versions);
     PyRun_SimpleStringFlags(
         "from time import time,ctime\n"
-        "print('Today is', ctime(time()))\n",
+        "from emb import numargs\n"
+        "print('Today is', ctime(time()))\n"
+        "print('Number of arguments', numargs(42, 100))",
         nullptr);
 
     Py_FinalizeEx();
