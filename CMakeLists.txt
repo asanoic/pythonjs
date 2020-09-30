@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(napi-python)
+project(pythonjs)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
@@ -13,17 +13,19 @@ target_compile_definitions(node-lib INTERFACE NODE_ADDON_API_DISABLE_DEPRECATED)
 target_include_directories(node-lib INTERFACE "${pwd}/napi/include")
 
 add_library(python-lib INTERFACE)
-target_include_directories(python-lib INTERFACE "${pwd}/python-capi/include")
 
 if(WIN32)
     target_compile_options(${CMAKE_PROJECT_NAME} PUBLIC "-fno-keep-inline-dllexport" "-fexceptions" "-mthreads")
     target_link_options(${CMAKE_PROJECT_NAME} PUBLIC "-Wl,--exclude-all-symbols")
 
     target_link_libraries(node-lib INTERFACE "-L${pwd}/napi/lib" "-lnode")
+
+    target_include_directories(python-lib INTERFACE "${pwd}/python-capi/include")
     target_link_libraries(python-lib INTERFACE "-L${pwd}/python-capi/win" "-lpython38")
 
 else()
-
+    find_package(Python3 REQUIRED COMPONENTS Development)
+    target_link_libraries(python-lib INTERFACE Python3::Python)
 
 endif()
 
