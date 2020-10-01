@@ -34,10 +34,12 @@ const func = (a, b) => a.length * b;
 
 const pyCode = `
 from time import time,ctime
-import nodejs                # import nodejs module for nodejs host context
+# import nodejs module for nodejs host context
+import nodejs
 
 print('Today is:', ctime(time()))
-print('result of node call:', nodejs.call('nodeMultiplication', '42', 100)) # call nodeMultiplication using nodejs.call
+# call nodeMultiplication using nodejs.call
+print('result of node call:', nodejs.call('nodeMultiplication', '42', 100))
 `;
 
 const context = [
