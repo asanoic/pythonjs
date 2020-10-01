@@ -6,7 +6,7 @@ console.log(pyjs);
 const pyCode = fs.readFileSync("./pycode.py", "utf-8");
 
 function Multiplication(a, b) {
-    return a * b.length;
+    return a.length * b;
 }
 
 const pyExitCode = pyjs.run(pyCode, [{name: "nodeMultiplication", func: Multiplication}]);

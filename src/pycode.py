@@ -9,6 +9,6 @@ def multiply(a,b):
     return c
 
 print('Today is', ctime(time()))
-print('result of node call', nodejs.call('nodeMultiplication', '42', 100))
+print('result of node call', nodejs.call('nodeMultiplication', '42', 21))
 
 
