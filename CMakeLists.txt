@@ -5,7 +5,15 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(pwd ${CMAKE_CURRENT_LIST_DIR})
 
-add_library(${CMAKE_PROJECT_NAME} MODULE "${pwd}/src/main.cpp")
+list(APPEND src
+    "${pwd}/src/python.js.h"
+    "${pwd}/src/main.cpp"
+    "${pwd}/src/python-configure.h"
+    "${pwd}/src/python-configure.cpp"
+    "${pwd}/src/napi-run.cpp"
+)
+
+add_library(${CMAKE_PROJECT_NAME} MODULE ${src})
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".node" PREFIX "")
 
 add_library(node-lib INTERFACE)
@@ -32,12 +40,13 @@ endif()
 target_link_libraries(${CMAKE_PROJECT_NAME} node-lib python-lib)
 
 add_custom_target(copy-files ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${pwd}/src/test.js" "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${pwd}/src/test.js"  "${pwd}/src/pycode.py" "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 ## other files
 add_custom_target(other-files SOURCES
     "${pwd}/src/test.js"
+    "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
 )
 
