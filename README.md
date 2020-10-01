@@ -85,3 +85,21 @@ console.log(pyExitCode);
 
 
 Have fun! All python codes now are part of node.js!
+
+
+how to build
+============
+
+```
+   git clone https://github.com/asanoic/pythonjs.git --recursive
+   cmake [python-js-src-path]
+   cmake --build .
+```   
+on windows you might need copy `python38.dll` and `python38.zip` [$/python-capi/win] to same folder of `python.js.node`, if you do not have python installed.
+
+build requirement
+===========
+- C++ compiler supports C++14, recommand use [this](https://github.com/asanoic/asanoic-mingw64-build/releases)
+- Python 3.x, Python 3.8.6 is included in this repo for windows, on linux you can build from source based on your install.
+- napi headers which is included in this repo.
+
