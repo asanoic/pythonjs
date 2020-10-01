@@ -3,10 +3,12 @@
 using namespace std;
 
 #include "napi.h"
-#include "python.js.h"
-#include "python-configure.h"
+#include "Python.h"
 
-Napi::Object napiInit(Napi::Env env, Napi::Object exports) {
+#include "python.js.h"
+#include "configure.h"
+
+Napi::Object pyjsInit(Napi::Env env, Napi::Object exports) {
     configureNodejsModule();
     Napi::Object versions = Napi::Object::New(env);
     const napi_node_version* nodeVersion = Napi::VersionManagement::GetNodeVersion(env);
@@ -16,10 +18,7 @@ Napi::Object napiInit(Napi::Env env, Napi::Object exports) {
     versions.Set("python_capi", Napi::String::New(env, PYTHON_API_STRING));
     exports.Set("versions", versions);
     exports.Set("run", Napi::Function::New(env, pyjsRun));
-
-
-
     return exports;
 }
 
-NODE_API_MODULE(NAPI_PYTHON_JS, napiInit)
+NODE_API_MODULE(NAPI_PYTHON_JS, pyjsInit)

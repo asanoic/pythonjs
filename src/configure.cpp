@@ -1,24 +1,13 @@
-#include "python-configure.h"
+#include "configure.h"
 
 #include <memory>
 #include <vector>
 
-using namespace std;
-
 #include "napi.h"
+#include "Python.h"
+#include "utils.h"
 
-unordered_map<string, Napi::Function>& nodeFunctions() {
-    static unordered_map<string, Napi::Function> ret;
-    return ret;
-}
-
-struct PyDecRef {
-    void operator()(PyObject* pyObj) const noexcept {
-        Py_DecRef(pyObj);
-    }
-};
-
-using PyPtr = unique_ptr<PyObject, PyDecRef>;
+using namespace std;
 
 void configureNodejsModule() {
     PyImport_AppendInittab("nodejs", []() -> PyObject* {
@@ -36,18 +25,11 @@ void configureNodejsModule() {
                          if (nodeFunctions().count(name) == 0) return Py_None;
                          env = nodeFunctions()[name].Env();
                      } else {
-                         if (strcmp(Py_TYPE(item.get())->tp_name, "str") == 0) {
-                             PyPtr unicode(PyUnicode_AsUTF8String(item.get()));
-                             string value = PyBytes_AS_STRING(unicode.get());
-                             nodeArgs.push_back(Napi::String::New(env, value));
-                         } else if (strcmp(Py_TYPE(item.get())->tp_name, "int") == 0) {
-                             long value = PyLong_AsLong(item.get());
-                             nodeArgs.push_back(Napi::Number::New(env, value));
-                         }
+                         nodeArgs.push_back(valuePythonToNode(item.get(), env));
                      }
                  }
                  Napi::Value nodeResult = nodeFunctions()[name].Call(nodeArgs);
-                 return PyLong_FromLong(nodeResult.As<Napi::Number>().Int32Value());
+                 return valueNodeToPython(nodeResult);
              },
              METH_VARARGS, "Dynamic call nodejs context function."},
             {NULL, NULL, 0, NULL}};
