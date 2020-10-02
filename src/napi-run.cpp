@@ -35,9 +35,6 @@ Napi::Value pyjsRun(const Napi::CallbackInfo& info) {
     }
 
     string pythonCode = info[0].As<Napi::String>().ToString();
-
-    Py_Initialize();
     int exitCode = PyRun_SimpleStringFlags(pythonCode.data(), nullptr);
-    Py_FinalizeEx();
     return Napi::Number::New(env, exitCode);
 }
