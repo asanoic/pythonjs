@@ -6,3 +6,5 @@ def multiply(a,b):
     for i in range(0, a):
         c = c + nodejs.call('helper', b);
     return c
+
+print(multiply(3, 5))
