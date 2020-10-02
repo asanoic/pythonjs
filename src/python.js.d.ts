@@ -1,8 +1,10 @@
 declare namespace pythonjs {
-    function run(code: string, context?: Array<{
+    interface FunctionInfo {
         func: (...args: Array<any>) => any;
         name: string;
-    }>): Number;
+    }
+
+    function run(code: string, context?: Array<FunctionInfo>): Number;
 
     var versions: {
         node: string;
@@ -10,6 +12,12 @@ declare namespace pythonjs {
         python: string;
         python_capi: string;
     };
+
+    interface PyModule {
+        call(functionName: string, context?: Array<FunctionInfo>): any;
+    }
+
+    function import(moduleName: string, context?: Array<FunctionInfo>): PyModule;
 }
 
 export = pythonjs;
