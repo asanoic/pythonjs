@@ -1,8 +1,7 @@
-#include <string>
-using namespace std;
-
 #include "python.js.h"
+
 #include "utils.h"
+#include "configure.h"
 
 Napi::Value pyjsRun(const Napi::CallbackInfo& info) {
     int argLen = info.Length();
@@ -24,14 +23,7 @@ Napi::Value pyjsRun(const Napi::CallbackInfo& info) {
             Napi::TypeError::New(env, "Second optional argument should be array of function info [{name, func}].").ThrowAsJavaScriptException();
             return env.Undefined();
         }
-        Napi::Array funcArr = info[1].As<Napi::Array>();
-        int funcLen = funcArr.Length();
-        for (int i = 0, n = funcArr.Length(); i < n; ++i) {
-            Napi::Object funcInfo = funcArr.Get(i).As<Napi::Object>();
-            string name = funcInfo.Get("name").As<Napi::String>().ToString();
-            Napi::Function func = funcInfo.Get("func").As<Napi::Function>();
-            nodeFunctions()[name] = func;
-        }
+        addFunctionsToNodejsModule(info[1].As<Napi::Array>());
     }
 
     string pythonCode = info[0].As<Napi::String>().ToString();

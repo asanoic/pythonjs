@@ -13,6 +13,8 @@ list(APPEND src
     "${pwd}/src/configure.h"
     "${pwd}/src/configure.cpp"
     "${pwd}/src/napi-run.cpp"
+    "${pwd}/src/napi-import.cpp"
+    "${pwd}/src/napi-call.cpp"
 )
 
 add_library(${CMAKE_PROJECT_NAME} MODULE ${src})
@@ -43,12 +45,17 @@ endif()
 target_link_libraries(${CMAKE_PROJECT_NAME} node-lib python-lib)
 
 add_custom_target(copy-files ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${pwd}/src/test.js" "${pwd}/src/python.js.d.ts" "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${pwd}/src/test.js"
+    "${pwd}/src/pycode.py"
+    "${pwd}/src/python.js.d.ts"
+    "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 ## other files
 add_custom_target(other-files SOURCES
     "${pwd}/src/test.js"
+    "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
 )
 

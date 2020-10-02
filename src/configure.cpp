@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 
-#include "napi.h"
 #include "Python.h"
+#include "napi.h"
 #include "utils.h"
 
 using namespace std;
@@ -40,4 +40,14 @@ void configureNodejsModule() {
 
         return PyModule_Create(&nodejsModule);
     });
+}
+
+void addFunctionsToNodejsModule(Napi::Array funcArr) {
+    int funcLen = funcArr.Length();
+    for (int i = 0, n = funcArr.Length(); i < n; ++i) {
+        Napi::Object funcInfo = funcArr.Get(i).As<Napi::Object>();
+        string name = funcInfo.Get("name").As<Napi::String>().ToString();
+        Napi::Function func = funcInfo.Get("func").As<Napi::Function>();
+        nodeFunctions()[name] = func;
+    }
 }
