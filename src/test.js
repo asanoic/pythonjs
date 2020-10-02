@@ -3,14 +3,11 @@ console.log(pyjs.versions);
 
 function closure() {
     let inside = 50;
-    return (a, b) => {
-    console.log(a, b);
-    return (a.length * b) * inside;
-    }
+    return (a, b) => (a.length * b) * inside;
 }
 
-function combine(...args) {
-   return args;
+function reverse(...args) {
+   return args.reverse();
 }
 
 const pyCode = `
@@ -25,8 +22,8 @@ def multiply(a,b):
     return c
 
 print('Today is:', ctime(time()))
-print('result of node call:', nodejs.call('nodeMultiplication', (4,2), 42.1))
-print('length of return list: ', len(nodejs.call('combine', 1, 2, (3, 4), '5')))
+print('return list from node: ', nodejs.call('reverse', {'abc' : 12, 'xyz' : 21}, False, [1, 2], (3, 4), '5'))
+print('result of node call:', nodejs.call('nodeMultiplication', (4,2), 4.2))
 `;
 
 const context = [
@@ -35,8 +32,8 @@ const context = [
         name: "nodeMultiplication",
     },
     {
-        func: combine,
-        name: "combine",
+        func: reverse,
+        name: "reverse",
     },
 ];
 

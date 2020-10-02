@@ -19,11 +19,25 @@ Napi::Value valuePythonToNode(PyObject* value, Napi::Env env) {
         double retValue = PyFloat_AsDouble(value);
         return Napi::Number::New(env, retValue);
 
+    } else if (strcmp(Py_TYPE(value)->tp_name, "bool") == 0) {
+        return Napi::Boolean::New(env, value == Py_True);
+
     } else if (strcmp(Py_TYPE(value)->tp_name, "tuple") == 0 || strcmp(Py_TYPE(value)->tp_name, "list") == 0) {
         Napi::Array retValue = Napi::Array::New(env);
         PyPtr iter(PyObject_GetIter(value));
         for (PyPtr item(PyIter_Next(iter.get())); item; item.reset(PyIter_Next(iter.get()))) {
             retValue.Set(retValue.Length(), valuePythonToNode(item.get(), env));
+        }
+        return retValue;
+
+    } else if (strcmp(Py_TYPE(value)->tp_name, "dict") == 0) {
+        Napi::Object retValue = Napi::Object::New(env);
+        PyPtr list(PyDict_Items(value));
+        for (int i = 0, n = PyList_Size(list.get()); i < n; ++i) {
+            PyObject* tuple = PyList_GetItem(list.get(), i);
+            Napi::Value key = valuePythonToNode(PyTuple_GetItem(tuple, 0), env);
+            Napi::Value value = valuePythonToNode(PyTuple_GetItem(tuple, 1), env);
+            retValue.Set(key, value);
         }
         return retValue;
     }
@@ -42,6 +56,9 @@ PyObject* valueNodeToPython(Napi::Value value) {
         } else {
             return PyFloat_FromDouble(value.As<Napi::Number>().DoubleValue());
         }
+    } else if (value.IsBoolean()) {
+        return PyBool_FromLong(value.As<Napi::Boolean>().Value() ? 1 : 0);
+
     } else if (value.IsArray()) {
         Napi::Array nodeArr = value.As<Napi::Array>();
         int n = nodeArr.Length();
@@ -50,6 +67,18 @@ PyObject* valueNodeToPython(Napi::Value value) {
             PyList_SetItem(retValue, i, valueNodeToPython(nodeArr.Get(i)));
         }
         return retValue;
+
+    } else if (value.IsObject()) {
+        Napi::Object nodeObj = value.As<Napi::Object>();
+        Napi::Array keys = nodeObj.GetPropertyNames();
+        PyObject* retValue = PyDict_New();
+        for (int i = 0, n = keys.Length(); i < n; ++i) {
+            Napi::Value key = keys.Get(i);
+            Napi::Value value = nodeObj.Get(key);
+            PyDict_SetItem(retValue, valueNodeToPython(key), valueNodeToPython(value));
+        }
+        return retValue;
+
     }
 
     return Py_None;
