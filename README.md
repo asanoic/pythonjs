@@ -5,7 +5,7 @@ All python codes now are part of node.js
 
 This project uses node napi and python capi to make python a part of node.js. This library only works on node.js (not browser)
 
-API `run` will be a good start when you use python.js, it will accept a python code and return exitCode when it done.
+API `run` is a good start when you use python.js, it accepts a python code and return exitCode when it done.
 
 Helle world, example
 
@@ -84,6 +84,9 @@ const pyExitCode = pyjs.run(pyCode, context);
 
 console.log(pyExitCode);
 ```
+
+call `import` and `call` can invoke seperate python function using javascript.
+
 more api declaration is in file `$/src/python.js.d.ts` file. 
 
 Have fun! All python codes now are part of node.js!
