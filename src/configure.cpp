@@ -32,11 +32,11 @@ void configureNodejsModule() {
                  return valueNodeToPython(nodeResult);
              },
              METH_VARARGS, "Dynamic call nodejs context function."},
-            {NULL, NULL, 0, NULL}};
+            {nullptr, nullptr, 0, nullptr}};
 
         static PyModuleDef nodejsModule = {
-            PyModuleDef_HEAD_INIT, "nodejs", NULL, -1, nodejsMethod,
-            NULL, NULL, NULL, NULL};
+            PyModuleDef_HEAD_INIT, "nodejs", nullptr, -1, nodejsMethod,
+            nullptr, nullptr, nullptr, nullptr};
 
         return PyModule_Create(&nodejsModule);
     });

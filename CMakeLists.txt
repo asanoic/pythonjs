@@ -17,6 +17,7 @@ list(APPEND src
 
 add_library(${CMAKE_PROJECT_NAME} MODULE ${src})
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".node" PREFIX "")
+target_compile_features(${CMAKE_PROJECT_NAME} PUBLIC cxx_std_17)
 
 add_library(node-lib INTERFACE)
 target_compile_definitions(node-lib INTERFACE NODE_ADDON_API_DISABLE_DEPRECATED)

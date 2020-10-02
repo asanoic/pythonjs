@@ -5,7 +5,6 @@ unordered_map<string, Napi::Function>& nodeFunctions() {
     return ret;
 }
 
-
 Napi::Value valuePythonToNode(PyObject* value, Napi::Env env) {
     if (strcmp(Py_TYPE(value)->tp_name, "str") == 0) {
         PyPtr unicode(PyUnicode_AsUTF8String(value));
@@ -19,6 +18,14 @@ Napi::Value valuePythonToNode(PyObject* value, Napi::Env env) {
     } else if (strcmp(Py_TYPE(value)->tp_name, "float") == 0) {
         double retValue = PyFloat_AsDouble(value);
         return Napi::Number::New(env, retValue);
+
+    } else if (strcmp(Py_TYPE(value)->tp_name, "tuple") == 0 || strcmp(Py_TYPE(value)->tp_name, "list") == 0) {
+        Napi::Array retValue = Napi::Array::New(env);
+        PyPtr iter(PyObject_GetIter(value));
+        for (PyPtr item(PyIter_Next(iter.get())); item; item.reset(PyIter_Next(iter.get()))) {
+            retValue.Set(retValue.Length(), valuePythonToNode(item.get(), env));
+        }
+        return retValue;
     }
 
     return env.Undefined();
@@ -35,6 +42,14 @@ PyObject* valueNodeToPython(Napi::Value value) {
         } else {
             return PyFloat_FromDouble(value.As<Napi::Number>().DoubleValue());
         }
+    } else if (value.IsArray()) {
+        Napi::Array nodeArr = value.As<Napi::Array>();
+        int n = nodeArr.Length();
+        PyObject* retValue = PyList_New(n);
+        for (int i = 0; i < n; ++i) {
+            PyList_SetItem(retValue, i, valueNodeToPython(nodeArr.Get(i)));
+        }
+        return retValue;
     }
 
     return Py_None;
