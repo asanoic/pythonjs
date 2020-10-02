@@ -16,13 +16,13 @@ import nodejs
 
 print('Today is:', ctime(time()))
 print('return list from node: ', nodejs.call('reverse', {'abc' : 12, 'xyz' : 21}, False, [1, 2], (3, 4), '5'))
-print('result of node call:', nodejs.call('nodeMultiplication', (4,2), 4.2))
+print('result of node call:', nodejs.call('nodeMultiply', (4,2), 4.2))
 `;
 
 const context = [
     {
         func: closure(),
-        name: "nodeMultiplication",
+        name: "nodeMultiply",
     },
     {
         func: reverse,

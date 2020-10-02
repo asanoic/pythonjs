@@ -1,23 +1,23 @@
-declare namespace pythonjs {
-    interface FunctionInfo {
-        func: (...args: Array<any>) => any;
-        name: string;
-    }
+interface FunctionInfo {
+    func: (...args: Array<any>) => any;
+    name: string;
+}
 
-    function run(code: string, context?: Array<FunctionInfo>): Number;
+interface PyModule {
+    call(functionName: string, ...args: Array<any>): any;
+}
 
-    var versions: {
+class PythonJS {
+    run(code: string, context?: Array<FunctionInfo>): Number;
+
+    versions: {
         node: string;
         node_napi: string;
         python: string;
         python_capi: string;
     };
 
-    interface PyModule {
-        call(functionName: string, context?: Array<FunctionInfo>): any;
-    }
-
-    function import(moduleName: string, context?: Array<FunctionInfo>): PyModule;
+    import(moduleName: string, context?: Array<FunctionInfo>): PyModule;
 }
 
-export = pythonjs;
+export = new PythonJS();
