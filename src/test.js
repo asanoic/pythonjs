@@ -28,10 +28,14 @@ const context = [
         func: reverse,
         name: "reverse",
     },
+    {
+        func: x => x * 100,
+        name: "helper",
+    },
 ];
 
-const pyExitCode = pyjs.run(pyCode, context);
-console.log(pyExitCode);
+//const pyExitCode = pyjs.run(pyCode, context);
+//console.log(pyExitCode);
 
-const pyModule = pyjs.import("pycode");
+const pyModule = pyjs.import("pycode", context);
 console.log(pyModule.call("multiply", 3, 15));
