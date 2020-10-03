@@ -32,6 +32,5 @@ Napi::Value pyjsImport(const Napi::CallbackInfo& info) {
     Napi::Object module = Napi::Object::New(env);
     module.Set("_handle", handle);
     module.Set("call", Napi::Function::New(env, pyjsCall, "call", pyModule));
-
     return module;
 }

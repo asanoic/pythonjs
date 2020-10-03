@@ -16,8 +16,12 @@ Napi::Object pyjsInit(Napi::Env env, Napi::Object exports) {
     versions.Set("node_napi", Napi::String::New(env, to_string(NAPI_VERSION)));
     versions.Set("python", Napi::String::New(env, PY_VERSION));
     versions.Set("python_capi", Napi::String::New(env, PYTHON_API_STRING));
+
     Py_Initialize();
-    Napi::External<void> cleaner = Napi::External<void>::New(env, nullptr, bind(Py_FinalizeEx));
+    Napi::External<void> cleaner = Napi::External<void>::New(env, nullptr, [](Napi::Env, void*) {
+        Py_FinalizeEx();
+        clearNodeFunctions();
+    });
 
     // add current folder to search folder
     PyRun_SimpleStringFlags("import sys\nsys.path.append('.')", nullptr);

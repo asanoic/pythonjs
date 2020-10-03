@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <iostream>
 
 #include "Python.h"
 #include "napi.h"
@@ -48,6 +49,11 @@ void addFunctionsToNodejsModule(Napi::Array funcArr) {
         Napi::Object funcInfo = funcArr.Get(i).As<Napi::Object>();
         string name = funcInfo.Get("name").As<Napi::String>().ToString();
         Napi::Function func = funcInfo.Get("func").As<Napi::Function>();
-        nodeFunctions()[name] = func;
+        nodeFunctions()[name] = Napi::Persistent(func);
+        nodeFunctions()[name].SuppressDestruct();
     }
+}
+
+void clearNodeFunctions() {
+    nodeFunctions().clear();
 }

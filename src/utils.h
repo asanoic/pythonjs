@@ -12,7 +12,7 @@
 using namespace std;
 
 
-unordered_map<string, Napi::Function>& nodeFunctions();
+unordered_map<string, Napi::FunctionReference>& nodeFunctions();
 
 Napi::Value valuePythonToNode(PyObject* value, Napi::Env env);
 PyObject* valueNodeToPython(Napi::Value value);

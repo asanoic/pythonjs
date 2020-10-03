@@ -17,15 +17,6 @@ import nodejs
 print('Today is:', ctime(time()))
 print('return list from node: ', nodejs.call('reverse', {'abc' : 12, 'xyz' : 21}, False, [1, 2], (3, 4), '5'))
 print('result of node call:', nodejs.call('nodeMultiply', (4,2), 4.2))
-
-def multiply(a,b):
-    print("Will compute", a, "times", b)
-    c = 0
-    for i in range(0, a):
-        c = c + nodejs.call('helper', b);
-    return c
-
-print(multiply(3, 5))
 `;
 
 const context = [
@@ -43,8 +34,8 @@ const context = [
     },
 ];
 
-//const pyExitCode = pyjs.run(pyCode, context);
-//console.log(pyExitCode);
+const pyExitCode = pyjs.run(pyCode, context);
+console.log("exit code", pyExitCode);
 
 const pyModule = pyjs.import("pycode", context);
-console.log(pyModule.call("multiply", 3, 15));
+console.log("single python call:", pyModule.call("multiply", 3, 15));

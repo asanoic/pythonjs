@@ -7,4 +7,6 @@ void configureNodejsModule();
 
 void addFunctionsToNodejsModule(Napi::Array funcArr);
 
+void clearNodeFunctions();
+
 #endif // CONFIGURE_H
