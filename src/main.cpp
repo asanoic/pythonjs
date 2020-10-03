@@ -1,11 +1,11 @@
 #include <string>
-using namespace std;
 
 #include "Python.h"
-#include "napi.h"
 
 #include "configure.h"
 #include "python.js.h"
+
+using namespace std;
 
 Napi::Object pyjsInit(Napi::Env env, Napi::Object exports) {
     configureNodejsModule();

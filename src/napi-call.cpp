@@ -1,7 +1,6 @@
 #include "python.js.h"
 
 #include "utils.h"
-#include "configure.h"
 
 Napi::Value pyjsCall(const Napi::CallbackInfo& info) {
     int argLen = info.Length();

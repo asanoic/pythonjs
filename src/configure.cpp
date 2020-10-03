@@ -1,14 +1,6 @@
 #include "configure.h"
 
-#include <memory>
-#include <vector>
-#include <iostream>
-
-#include "Python.h"
-#include "napi.h"
 #include "utils.h"
-
-using namespace std;
 
 void configureNodejsModule() {
     PyImport_AppendInittab("nodejs", []() -> PyObject* {
