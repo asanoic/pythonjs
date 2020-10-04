@@ -8,7 +8,7 @@
 using namespace std;
 
 Napi::Object pyjsInit(Napi::Env env, Napi::Object exports) {
-    configureNodejsModule();
+    configureNodejsModule(exports);
 
     Napi::Object versions = Napi::Object::New(env);
     const napi_node_version* nodeVersion = Napi::VersionManagement::GetNodeVersion(env);
@@ -17,16 +17,6 @@ Napi::Object pyjsInit(Napi::Env env, Napi::Object exports) {
     versions.Set("python", Napi::String::New(env, PY_VERSION));
     versions.Set("python_capi", Napi::String::New(env, PYTHON_API_STRING));
 
-    Py_Initialize();
-    Napi::External<void> cleaner = Napi::External<void>::New(env, nullptr, [](Napi::Env, void*) {
-        Py_FinalizeEx();
-        clearNodeFunctions();
-    });
-
-    // add current folder to search folder
-    PyRun_SimpleStringFlags("import sys\nsys.path.append('.')", nullptr);
-
-    exports.Set("_", cleaner);
     exports.Set("versions", versions);
     exports.Set("run", Napi::Function::New(env, pyjsRun));
     exports.Set("import", Napi::Function::New(env, pyjsImport));

@@ -1,7 +1,7 @@
 #include "python.js.h"
 
-#include "utils.h"
 #include "configure.h"
+#include "utils.h"
 
 Napi::Value pyjsImport(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
@@ -28,9 +28,8 @@ Napi::Value pyjsImport(const Napi::CallbackInfo& info) {
     string moduleName = info[0].As<Napi::String>().Utf8Value();
     PyPtr pyModuleName(PyUnicode_DecodeFSDefault(moduleName.data()));
     PyObject* pyModule = PyImport_Import(pyModuleName.get());
-    Napi::External<PyObject> handle = Napi::External<PyObject>::New(env, pyModule, bind(Py_DecRef, placeholders::_2));
     Napi::Object module = Napi::Object::New(env);
-    module.Set("_handle", handle);
     module.Set("call", Napi::Function::New(env, pyjsCall, "call", pyModule));
+    addFinalizer(module, bind(Py_DecRef, pyModule));
     return module;
 }

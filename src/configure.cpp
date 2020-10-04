@@ -2,7 +2,7 @@
 
 #include "utils.h"
 
-void configureNodejsModule() {
+void configureNodejsModule(Napi::Value jsModule) {
     PyImport_AppendInittab("nodejs", []() -> PyObject* {
         static PyMethodDef nodejsMethod[] = {
             {"call",
@@ -33,6 +33,14 @@ void configureNodejsModule() {
 
         return PyModule_Create(&nodejsModule);
     });
+
+    Py_Initialize();
+    addFinalizer(jsModule, bind(Py_FinalizeEx));
+    addFinalizer(jsModule, clearNodeFunctions);
+
+    // add current folder to search folder
+    PyRun_SimpleStringFlags("import sys\nsys.path.append('.')", nullptr);
+
 }
 
 void addFunctionsToNodejsModule(Napi::Array funcArr) {

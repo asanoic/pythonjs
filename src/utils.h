@@ -2,15 +2,14 @@
 #define UTILS_H
 
 #include <memory>
-#include <vector>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
-#include "napi.h"
 #include "Python.h"
+#include "napi.h"
 
 using namespace std;
-
 
 unordered_map<string, Napi::FunctionReference>& nodeFunctions();
 
@@ -25,5 +24,6 @@ struct PyDecRef {
 
 using PyPtr = unique_ptr<PyObject, PyDecRef>;
 
+void addFinalizer(Napi::Value value, function<void(void)> func);
 
 #endif // UTILS_H

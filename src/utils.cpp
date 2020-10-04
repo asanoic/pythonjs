@@ -78,8 +78,17 @@ PyObject* valueNodeToPython(Napi::Value value) {
             PyDict_SetItem(retValue, valueNodeToPython(key), valueNodeToPython(value));
         }
         return retValue;
-
     }
 
-    return Py_None;
+    return (Py_IncRef(Py_None), Py_None);
+}
+
+void addFinalizer(Napi::Value value, function<void(void)> func) {
+    function<void(void)>* f = new function<void(void)>(func);
+    static auto callback = [](napi_env e, void* d, void* h) -> void {
+        function<void(void)>* f = reinterpret_cast<function<void(void)>*>(h);
+        (*f)();
+        delete f;
+    };
+    napi_add_finalizer(value.Env(), value, nullptr, callback, f, nullptr);
 }

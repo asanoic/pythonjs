@@ -3,7 +3,7 @@
 
 #include "napi.h"
 
-void configureNodejsModule();
+void configureNodejsModule(Napi::Value jsModule);
 
 void addFunctionsToNodejsModule(Napi::Array funcArr);
 
