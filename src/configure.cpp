@@ -3,10 +3,10 @@
 #include "utils.h"
 
 void configureNodejsModule(Napi::Value jsModule) {
-    PyImport_AppendInittab("nodejs", []() -> PyObject* {
+    PyImport_AppendInittab("nodejs", []() noexcept -> PyObject* {
         static PyMethodDef nodejsMethod[] = {
             {"call",
-             [](PyObject* self, PyObject* args) -> PyObject* {
+             [](PyObject* self, PyObject* args) noexcept -> PyObject* {
                  PyPtr iter(PyObject_GetIter(args));
                  string name;
                  napi_env env = nullptr;

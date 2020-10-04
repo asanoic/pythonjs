@@ -85,7 +85,7 @@ PyObject* valueNodeToPython(Napi::Value value) {
 
 void addFinalizer(Napi::Value value, function<void(void)> func) {
     function<void(void)>* f = new function<void(void)>(func);
-    static auto callback = [](napi_env e, void* d, void* h) -> void {
+    static auto callback = [](napi_env e, void* d, void* h) noexcept -> void {
         function<void(void)>* f = reinterpret_cast<function<void(void)>*>(h);
         (*f)();
         delete f;
