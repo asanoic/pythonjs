@@ -44,24 +44,29 @@ endif()
 
 target_link_libraries(${CMAKE_PROJECT_NAME} node-lib python-lib)
 
-add_custom_target(copy-files ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+## copy files to build folder
+list(APPEND copied-files
     "${pwd}/src/test.js"
     "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
-    "${pwd}/capi/libs64/python38.dll"
-    "${pwd}/capi/libs64/python38.zip"
+)
+
+if (WIN32)
+    list(APPEND copied-files
+        "${pwd}/capi/libs64/python38.dll"
+        "${pwd}/capi/libs64/python38.zip"
+    )
+endif()
+
+add_custom_target(copy-files ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${copied-files}
     "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
-## other files
+## other files for ide show
 add_custom_target(other-files SOURCES
     "${pwd}/src/test.js"
     "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
-    "${pwd}/readme.md"
+    "${pwd}/README.md"
 )
-
-
-
-
