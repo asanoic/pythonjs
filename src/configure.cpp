@@ -35,12 +35,11 @@ void configureNodejsModule(Napi::Value jsModule) {
     });
 
     Py_Initialize();
-    addFinalizer(jsModule, bind(Py_FinalizeEx));
-    addFinalizer(jsModule, clearNodeFunctions);
+    addFinalizer(jsModule, Py_FinalizeEx);
+    addFinalizer(jsModule, bind(&NodeFunctionTable::clear, &nodeFunctions()));
 
     // add current folder to search folder
     PyRun_SimpleStringFlags("import sys\nsys.path.append('.')", nullptr);
-
 }
 
 void addFunctionsToNodejsModule(Napi::Array funcArr) {
@@ -52,8 +51,4 @@ void addFunctionsToNodejsModule(Napi::Array funcArr) {
         nodeFunctions()[name] = Napi::Persistent(func);
         nodeFunctions()[name].SuppressDestruct();
     }
-}
-
-void clearNodeFunctions() {
-    nodeFunctions().clear();
 }

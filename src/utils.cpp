@@ -1,7 +1,7 @@
 #include "utils.h"
 
-unordered_map<string, Napi::FunctionReference>& nodeFunctions() {
-    static unordered_map<string, Napi::FunctionReference> ret;
+NodeFunctionTable& nodeFunctions() {
+    static NodeFunctionTable ret;
     return ret;
 }
 

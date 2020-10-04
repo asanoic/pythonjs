@@ -30,5 +30,4 @@ Napi::Value pyjsCall(const Napi::CallbackInfo& info) {
     PyPtr pyRet(PyObject_CallObject(pyFunc.get(), pyArgs.get()));
 
     return valuePythonToNode(pyRet.get(), env);
-
 }
