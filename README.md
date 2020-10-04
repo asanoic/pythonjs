@@ -100,7 +100,7 @@ how to build
    cmake [python-js-src-path]
    cmake --build .
 ```   
-on windows you might need copy `python38.dll` and `python38.zip` [$/python-capi/win] to same folder of `python.js.node`, if you do not have python installed.
+on windows you might need copy `python38.dll` and `python38.zip` [$/capi/libs64] to same folder of `python.js.node`, if you do not have python installed.
 
 build requirement
 ===========

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 project("python.js")
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(pwd ${CMAKE_CURRENT_LIST_DIR})
 
@@ -33,8 +33,8 @@ if(WIN32)
 
     target_link_libraries(node-lib INTERFACE "-L${pwd}/napi/lib" "-lnode")
 
-    target_include_directories(python-lib INTERFACE "${pwd}/python-capi/include")
-    target_link_libraries(python-lib INTERFACE "-L${pwd}/python-capi/win" "-lpython38")
+    target_include_directories(python-lib INTERFACE "${pwd}/capi/include")
+    target_link_libraries(python-lib INTERFACE "-L${pwd}/capi/libs64" "-lpython38")
 
 else()
     find_package(Python3 REQUIRED COMPONENTS Development)
@@ -49,6 +49,8 @@ add_custom_target(copy-files ALL
     "${pwd}/src/test.js"
     "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
+    "${pwd}/capi/libs64/python38.dll"
+    "${pwd}/capi/libs64/python38.zip"
     "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
@@ -57,6 +59,7 @@ add_custom_target(other-files SOURCES
     "${pwd}/src/test.js"
     "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
+    "${pwd}/readme.md"
 )
 
 

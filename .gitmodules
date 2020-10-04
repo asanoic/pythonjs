@@ -1,3 +1,6 @@
 [submodule "napi"]
 	path = napi
 	url = https://github.com/asanoic/node-napi-mingw64.git
+[submodule "capi"]
+	path = capi
+	url = https://github.com/asanoic/lib-python-win.git
