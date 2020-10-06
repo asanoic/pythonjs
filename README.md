@@ -87,7 +87,7 @@ console.log(pyExitCode);
 
 call `import` and `call` can invoke seperate python function using javascript.
 
-more api declaration is in file `$/src/python.js.d.ts` file. 
+more api declaration is in file `$/src/python.js.d.ts`. 
 
 Have fun! All python codes now are part of node.js!
 
@@ -100,7 +100,7 @@ how to build
    cmake [python-js-src-path] -DSEARCH_PATH=[gawk path]
    cmake --build .
 ```
-gawk is for patching some files to make them work on mingw-w64, you can find it in [MSYS2](https://www.msys2.org/)
+`gawk` is for patching some files to make them work on mingw-w64, you can find it in [MSYS2](https://www.msys2.org/)
 
 on windows you might need copy `python39.dll` and `lib` [$/capi/python/lib] to same folder of `python.js.node`, if you do not have python installed.
 
