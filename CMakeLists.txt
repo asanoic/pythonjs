@@ -5,6 +5,8 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(pwd ${CMAKE_CURRENT_LIST_DIR})
 
+set(python-name "python39")
+
 if(WIN32)
     add_subdirectory("${pwd}/capi")
 endif()
@@ -37,7 +39,7 @@ if(WIN32)
 
     target_link_libraries(node-lib INTERFACE "-L${pwd}/napi/lib" "-lnode")
 
-    target_link_libraries(python-lib INTERFACE python39)
+    target_link_libraries(python-lib INTERFACE "${python-name}")
 
 else()
     find_package(Python3 REQUIRED COMPONENTS Development)
@@ -57,10 +59,10 @@ add_custom_target(copy-files ALL
 )
 
 if (WIN32)
-    file(COPY "${pwd}/capi/python/Lib" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
     add_custom_target(copy-python ALL
-        COMMAND ${CMAKE_COMMAND} -E copy 
-        "${CMAKE_CURRENT_BINARY_DIR}/capi/python39.dll"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+        "${CMAKE_CURRENT_BINARY_DIR}/capi/${python-name}.zip"
+        "${CMAKE_CURRENT_BINARY_DIR}/capi/${python-name}.dll"
         "${CMAKE_CURRENT_BINARY_DIR}"
         DEPENDS ${CMAKE_PROJECT_NAME}
     )
