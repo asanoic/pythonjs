@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 project("python.js")
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(pwd ${CMAKE_CURRENT_LIST_DIR})
 
@@ -48,23 +48,23 @@ endif()
 target_link_libraries(${CMAKE_PROJECT_NAME} node-lib python-lib)
 
 ## copy files to build folder
-list(APPEND copied-files
+add_custom_target(copy-files ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different 
     "${pwd}/src/test.js"
     "${pwd}/src/pycode.py"
     "${pwd}/src/python.js.d.ts"
-)
-
-#if (WIN32)
-#    list(APPEND copied-files
-#        "${pwd}/capi/libs64/python38.dll"
-#        "${pwd}/capi/libs64/python38.zip"
-#    )
-#endif()
-
-add_custom_target(copy-files ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${copied-files}
     "${CMAKE_CURRENT_BINARY_DIR}"
 )
+
+if (WIN32)
+    file(COPY "${pwd}/capi/python/Lib" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+    add_custom_target(copy-python ALL
+        COMMAND ${CMAKE_COMMAND} -E copy 
+        "${CMAKE_CURRENT_BINARY_DIR}/capi/python39.dll"
+        "${CMAKE_CURRENT_BINARY_DIR}"
+        DEPENDS ${CMAKE_PROJECT_NAME}
+    )
+endif()
 
 ## other files for ide show
 add_custom_target(other-files SOURCES
