@@ -95,6 +95,8 @@ Have fun! All python codes now are part of node.js!
 how to build
 ============
 
+__if you don't want to make a build from source, try demo on release section.__
+
 ```
    git clone https://github.com/asanoic/pythonjs.git --recursive
    cmake [python-js-src-path] -DSEARCH_PATH=[gawk path]
