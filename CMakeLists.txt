@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.13)
 project("python.js")
 
-set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 
 set(pwd ${CMAKE_CURRENT_LIST_DIR})
+
+if(WIN32)
+    add_subdirectory("${pwd}/capi")
+endif()
 
 list(APPEND src
     "${pwd}/src/python.js.h"
@@ -33,8 +37,7 @@ if(WIN32)
 
     target_link_libraries(node-lib INTERFACE "-L${pwd}/napi/lib" "-lnode")
 
-    target_include_directories(python-lib INTERFACE "${pwd}/capi/include")
-    target_link_libraries(python-lib INTERFACE "-L${pwd}/capi/libs64" "-lpython38")
+    target_link_libraries(python-lib INTERFACE python39)
 
 else()
     find_package(Python3 REQUIRED COMPONENTS Development)
@@ -51,12 +54,12 @@ list(APPEND copied-files
     "${pwd}/src/python.js.d.ts"
 )
 
-if (WIN32)
-    list(APPEND copied-files
-        "${pwd}/capi/libs64/python38.dll"
-        "${pwd}/capi/libs64/python38.zip"
-    )
-endif()
+#if (WIN32)
+#    list(APPEND copied-files
+#        "${pwd}/capi/libs64/python38.dll"
+#        "${pwd}/capi/libs64/python38.zip"
+#    )
+#endif()
 
 add_custom_target(copy-files ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${copied-files}
