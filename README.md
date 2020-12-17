@@ -103,12 +103,12 @@ __if you don't want to make a build from source, try demo on release section.__
    cmake --build .
 ```
 `gawk` is for patching some files to make them work on mingw-w64, you can find it in [MSYS2](https://www.msys2.org/)
-
 on windows you might need copy `python39.dll` and `lib` [$/capi/python/lib] to same folder of `python.js.node`, if you do not have python installed.
+build work on Linux and Windows/MinGW-w64, other platforms or compilers might need change cmake file.
 
 build requirement
 ===========
 - C++ compiler supports C++14, recommand use [this](https://github.com/asanoic/asanoic-mingw64-build/releases)
-- Python 3.x, Python 3.9.0 is included in this repo for windows, on linux you can build from source based on your install.
+- Python 3.x, Python 3.9.1 is included in this repo for windows, on linux you can build from source based on your install.
 - napi headers which is included in this repo.
 
