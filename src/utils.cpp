@@ -40,6 +40,20 @@ Napi::Value valuePythonToNode(PyObject* value, Napi::Env env) {
             retValue.Set(key, value);
         }
         return retValue;
+
+    } else if (strcmp(Py_TYPE(value)->tp_name, "bytearray") == 0) {
+        int size = PyByteArray_Size(value);
+        void* data = PyByteArray_AsString(value);
+        Napi::ArrayBuffer retValue = Napi::ArrayBuffer::New(env, size);
+        memcpy(retValue.Data(), data, size);
+        return retValue;
+
+    } else if (strcmp(Py_TYPE(value)->tp_name, "bytes") == 0) {
+        int size = PyBytes_Size(value);
+        void* data = PyBytes_AsString(value);
+        Napi::ArrayBuffer retValue = Napi::ArrayBuffer::New(env, size);
+        memcpy(retValue.Data(), data, size);
+        return retValue;
     }
 
     return env.Undefined();
@@ -66,6 +80,11 @@ PyObject* valueNodeToPython(Napi::Value value) {
         for (int i = 0; i < n; ++i) {
             PyList_SetItem(retValue, i, valueNodeToPython(nodeArr.Get(i)));
         }
+        return retValue;
+
+    } else if (value.IsArrayBuffer()) {
+        Napi::ArrayBuffer nodeArrBuf = value.As<Napi::ArrayBuffer>();
+        PyObject* retValue = PyByteArray_FromStringAndSize((char*)nodeArrBuf.Data(), nodeArrBuf.ByteLength());
         return retValue;
 
     } else if (value.IsObject()) {

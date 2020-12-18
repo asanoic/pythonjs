@@ -15,7 +15,7 @@ from time import time,ctime
 import nodejs
 
 print('Today is:', ctime(time()))
-print('return list from node: ', nodejs.call('reverse', {'abc' : 12, 'xyz' : 21}, False, [1, 2], (3, 4), '5'))
+print('return list from node: ', nodejs.call('reverse', {'ba' : b'abc', 'abc' : 12, 'xyz' : 21}, False, [1, 2], (3, 4), '5'))
 print('result of node call:', nodejs.call('nodeMultiply', (4,2), 4.2))
 `;
 
